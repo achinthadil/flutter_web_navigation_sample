@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.put<PatientController>(PatientController());
       }),
+      defaultTransition: Transition.noTransition,
     );
   }
 }
@@ -98,8 +99,9 @@ class PatientsScreen extends StatelessWidget {
           Expanded(
             child: Center(
               child: ElevatedButton(
-                onPressed: () =>
-                    Get.toNamed('/patient/123'), // For patient with ID 123
+                onPressed: () => Get.toNamed(
+                  '/patient/123',
+                ), // For patient with ID 123
                 child: Text('Go to PatientData Screen with ID'),
               ),
             ),
