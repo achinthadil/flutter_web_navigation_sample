@@ -99,12 +99,21 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Row(
         children: [
-          PersistentSidebar(),
+          const PersistentSidebar(),
           Expanded(
-            child: Center(child: Text('Detail Screen')),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Breadcrumb(),
+                const Center(
+                  child: Text('Detail Screen'),
+                ),
+                const SizedBox.shrink(),
+              ],
+            ),
           ),
         ],
       ),
@@ -174,38 +183,51 @@ class PatientController extends GetxController {
 }
 
 class Breadcrumb extends StatelessWidget {
-  List<String> getBreadcrumbsFromUrl() {
+  List<Map<String, String>> getBreadcrumbsFromUrl() {
     String url = Get.currentRoute; // Get current route with GetX
 
     // Split the URL by '/' and remove empty segments
     List<String> segments =
         url.split('/').where((segment) => segment.isNotEmpty).toList();
 
-    // Map each segment to its human-readable counterpart
-    segments = segments.map((segment) {
-      if (segment.contains('patients') &&
+    // Map each segment to its human-readable counterpart and corresponding route
+    List<Map<String, String>> breadcrumbMap = segments.map((segment) {
+      if (segment.contains('patient') &&
           segments.indexOf(segment) == segments.length - 1) {
-        return 'Patients ${Get.parameters['id'] ?? ''}';
+        return {
+          'display': 'Patient ${Get.parameters['id'] ?? ''}',
+          'route': '/patient/${Get.parameters['id']}'
+        };
       }
-      return segment.capitalizeFirst!;
+      return {'display': segment.capitalizeFirst ?? '', 'route': "/$segment"};
     }).toList();
 
-    return [
-      'Dashboard',
-      ...segments
-    ]; // Add 'Dashboard' as the starting breadcrumb
+    breadcrumbMap.insert(0, {
+      'display': 'Dashboard',
+      'route': '/'
+    }); // Add 'Dashboard' as the starting breadcrumb
+
+    return breadcrumbMap;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> breadcrumbs = getBreadcrumbsFromUrl();
+    List<Map<String, String>> breadcrumbs = getBreadcrumbsFromUrl();
 
     return Row(
-      children: breadcrumbs.map((crumb) {
+      children: breadcrumbs.map((breadcrumb) {
         return Row(
           children: <Widget>[
-            Text(crumb),
-            if (crumb != breadcrumbs.last) ...[
+            GestureDetector(
+              onTap: () {
+                Get.offNamed(breadcrumb['route']!);
+              },
+              child: Text(breadcrumb['display']!,
+                  style: TextStyle(
+                      decoration: TextDecoration
+                          .underline)), // you can style it to show it's clickable
+            ),
+            if (breadcrumb != breadcrumbs.last) ...[
               Icon(Icons.arrow_forward_ios,
                   size: 12), // Arrow icon or something similar
             ]
