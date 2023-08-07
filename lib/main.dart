@@ -1,9 +1,17 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  usePathUrlStrategy();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -12,13 +20,13 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(
           name: '/',
-          page: () => HomeView(),
+          page: () => const HomeView(),
         ),
-        GetPage(name: '/detail', page: () => DetailScreen()),
-        GetPage(name: '/patients', page: () => PatientsScreen()),
+        GetPage(name: '/detail', page: () => const DetailScreen()),
+        GetPage(name: '/patients', page: () => const PatientsScreen()),
         GetPage(
           name: '/patient/:id',
-          page: () => PatientDataScreen(),
+          page: () => const PatientDataScreen(),
         ),
       ],
       initialBinding: BindingsBuilder(() {
@@ -30,9 +38,11 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Row(
         children: [
           PersistentSidebar(),
@@ -44,17 +54,19 @@ class HomeView extends StatelessWidget {
 }
 
 class PersistentSidebar extends StatelessWidget {
+  const PersistentSidebar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ElevatedButton(
           onPressed: () => Get.offNamed('/'),
-          child: Text('Home'),
+          child: const Text('Home'),
         ),
         ElevatedButton(
           onPressed: () => Get.offNamed('/patients'),
-          child: Text('Patients'),
+          child: const Text('Patients'),
         ),
       ],
     );
@@ -62,21 +74,25 @@ class PersistentSidebar extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ElevatedButton(
         onPressed: () => Navigator.pushNamed(context, '/detail'),
-        child: Text('Go to Detail Screen'),
+        child: const Text('Go to Detail Screen'),
       ),
     );
   }
 }
 
 class DetailScreen extends StatelessWidget {
+  const DetailScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Row(
         children: [
           PersistentSidebar(),
@@ -90,19 +106,21 @@ class DetailScreen extends StatelessWidget {
 }
 
 class PatientsScreen extends StatelessWidget {
+  const PatientsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          PersistentSidebar(),
+          const PersistentSidebar(),
           Expanded(
             child: Center(
               child: ElevatedButton(
                 onPressed: () => Get.toNamed(
                   '/patient/123',
                 ), // For patient with ID 123
-                child: Text('Go to PatientData Screen with ID'),
+                child: const Text('Go to PatientData Screen with ID'),
               ),
             ),
           ),
@@ -113,13 +131,15 @@ class PatientsScreen extends StatelessWidget {
 }
 
 class PatientDataScreen extends GetView<PatientController> {
+  const PatientDataScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final patientId = Get.parameters['id'] ?? ''; // Extract ID from the URL
     return Scaffold(
       body: Row(
         children: [
-          PersistentSidebar(),
+          const PersistentSidebar(),
           Expanded(
             child: Center(
               child: Text('PatientData Screen for Patient ID: $patientId'),
