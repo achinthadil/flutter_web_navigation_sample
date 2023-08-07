@@ -1,11 +1,11 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
+// import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get.dart';
 
 void main() {
-  usePathUrlStrategy();
+  // usePathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -58,17 +58,24 @@ class PersistentSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () => Get.offNamed('/'),
-          child: const Text('Home'),
-        ),
-        ElevatedButton(
-          onPressed: () => Get.offNamed('/patients'),
-          child: const Text('Patients'),
-        ),
-      ],
+    return Container(
+      width: 200,
+      height: MediaQuery.sizeOf(context).height,
+      decoration: BoxDecoration(color: Colors.amber[100]),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () => Get.offNamed('/'),
+            child: const Text('Home'),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => Get.offNamed('/patients'),
+            child: const Text('Patients'),
+          ),
+        ],
+      ),
     );
   }
 }
