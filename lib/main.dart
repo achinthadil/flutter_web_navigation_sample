@@ -66,12 +66,12 @@ class PersistentSidebar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-            onPressed: () => Get.offNamed('/'),
+            onPressed: () => Get.toNamed('/'),
             child: const Text('Home'),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => Get.offNamed('/patients'),
+            onPressed: () => Get.toNamed('/patients'),
             child: const Text('Patients'),
           ),
         ],
