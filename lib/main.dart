@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/detail', page: () => const DetailScreen()),
         GetPage(name: '/patients', page: () => const PatientsScreen()),
         GetPage(
-          name: '/patient/:id',
+          name: '/patients/:id',
           page: () => const PatientDataScreen(),
         ),
       ],
@@ -125,7 +125,7 @@ class PatientsScreen extends StatelessWidget {
             child: Center(
               child: ElevatedButton(
                 onPressed: () => Get.toNamed(
-                  '/patient/123',
+                  '/patients/123',
                 ), // For patient with ID 123
                 child: const Text('Go to PatientData Screen with ID'),
               ),
@@ -148,8 +148,15 @@ class PatientDataScreen extends GetView<PatientController> {
         children: [
           const PersistentSidebar(),
           Expanded(
-            child: Center(
-              child: Text('PatientData Screen for Patient ID: $patientId'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Breadcrumb(),
+                Center(
+                  child: Text('PatientData Screen for Patient ID: $patientId'),
+                ),
+                const SizedBox.shrink(),
+              ],
             ),
           ),
         ],
@@ -163,5 +170,48 @@ class PatientController extends GetxController {
 
   void setPatientId(String id) {
     patientId.value = id;
+  }
+}
+
+class Breadcrumb extends StatelessWidget {
+  List<String> getBreadcrumbsFromUrl() {
+    String url = Get.currentRoute; // Get current route with GetX
+
+    // Split the URL by '/' and remove empty segments
+    List<String> segments =
+        url.split('/').where((segment) => segment.isNotEmpty).toList();
+
+    // Map each segment to its human-readable counterpart
+    segments = segments.map((segment) {
+      if (segment.contains('patients') &&
+          segments.indexOf(segment) == segments.length - 1) {
+        return 'Patients ${Get.parameters['id'] ?? ''}';
+      }
+      return segment.capitalizeFirst!;
+    }).toList();
+
+    return [
+      'Dashboard',
+      ...segments
+    ]; // Add 'Dashboard' as the starting breadcrumb
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> breadcrumbs = getBreadcrumbsFromUrl();
+
+    return Row(
+      children: breadcrumbs.map((crumb) {
+        return Row(
+          children: <Widget>[
+            Text(crumb),
+            if (crumb != breadcrumbs.last) ...[
+              Icon(Icons.arrow_forward_ios,
+                  size: 12), // Arrow icon or something similar
+            ]
+          ],
+        );
+      }).toList(),
+    );
   }
 }
