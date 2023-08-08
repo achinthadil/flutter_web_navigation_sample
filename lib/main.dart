@@ -1,239 +1,321 @@
-// ignore_for_file: depend_on_referenced_packages
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+//
+// void main() {
+//   runApp(const MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       title: 'Navigation App',
+//       initialRoute: '/',
+//       getPages: [
+//         GetPage(
+//           name: '/',
+//           page: () => HomeView(),
+//         ),
+//       ],
+//       defaultTransition: Transition.noTransition,
+//     );
+//   }
+// }
+//
+// class HomeViewNavigation {
+//   HomeViewNavigation._();
+//
+//   static const home = '/home';
+//   static const homeDetail = '/home/detail';
+//   static const patients = '/patients';
+//   static const patientDetail = '/patients/detail';
+// }
+//
+// class HomeView extends StatelessWidget {
+//   HomeView({super.key});
+//
+//   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Row(
+//         children: [
+//           const PersistentSidebar(),
+//           Expanded(
+//             child: Navigator(
+//               key: _navigatorKey,
+//               initialRoute: HomeViewNavigation.home,
+//               onGenerateRoute: (routes) {
+//                 debugPrint("😤😤😤 ${routes.name}");
+//                 switch (routes.name) {
+//                   case HomeViewNavigation.home:
+//                     return GetPageRoute(
+//                       routeName: HomeViewNavigation.home,
+//                       page: () => const HomeScreen(),
+//                     );
+//                   case HomeViewNavigation.homeDetail:
+//                     return GetPageRoute(
+//                       routeName: HomeViewNavigation.homeDetail,
+//                       page: () => const HomeDetailScreen(),
+//                     );
+//                   case HomeViewNavigation.patients:
+//                     return GetPageRoute(
+//                       routeName: HomeViewNavigation.patients,
+//                       page: () => const PatientsScreen(),
+//                     );
+//                   case HomeViewNavigation.patientDetail:
+//                     return GetPageRoute(
+//                       routeName: HomeViewNavigation.patientDetail,
+//                       page: () => const PatientDetailScreen(),
+//                     );
+//                   default:
+//                     return null;
+//                 }
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class PersistentSidebar extends StatelessWidget {
+//   const PersistentSidebar({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 200,
+//       height: MediaQuery.sizeOf(context).height,
+//       decoration: BoxDecoration(color: Colors.amber[100]),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           ElevatedButton(
+//             onPressed: () => Get.toNamed(HomeViewNavigation.home),
+//             child: const Text('Home'),
+//           ),
+//           const SizedBox(height: 20),
+//           ElevatedButton(
+//             onPressed: () => Get.toNamed(HomeViewNavigation.patients),
+//             child: const Text('Patients'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class HomeScreen extends StatelessWidget {
+//   const HomeScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: ElevatedButton(
+//         onPressed: () => Get.offNamed(HomeViewNavigation.homeDetail),
+//         child: const Text('Go to Home Detail Screen'),
+//       ),
+//     );
+//   }
+// }
+//
+// class HomeDetailScreen extends StatelessWidget {
+//   const HomeDetailScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Text('Home Detail Screen'),
+//     );
+//   }
+// }
+//
+// class PatientsScreen extends StatelessWidget {
+//   const PatientsScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Row(
+//         children: [
+//           Expanded(
+//             child: Center(
+//               child: ElevatedButton(
+//                 onPressed: () => Get.offNamed(HomeViewNavigation.patientDetail),
+//                 child: const Text('Go to PatientDetail Screen'),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class PatientDetailScreen extends StatelessWidget {
+//   const PatientDetailScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Text('Patient Detail Screen'),
+//     );
+//   }
+// }
 
 import 'package:flutter/material.dart';
-// import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get.dart';
 
 void main() {
-  // usePathUrlStrategy();
-  runApp(const MyApp());
+  runApp(const NestedNavigation());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class NestedNavigation extends StatelessWidget {
+  const NestedNavigation({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Navigation App',
-      initialRoute: '/',
+      title: 'Nested Navigation - BNB',
+      theme: ThemeData(primarySwatch: Colors.blue),
       getPages: [
         GetPage(
           name: '/',
-          page: () => const HomeView(),
-        ),
-        GetPage(name: '/detail', page: () => const DetailScreen()),
-        GetPage(name: '/patients', page: () => const PatientsScreen()),
-        GetPage(
-          name: '/patients/:id',
-          page: () => const PatientDataScreen(),
+          page: () => const HomeViewWrapper(),
         ),
       ],
-      initialBinding: BindingsBuilder(() {
-        Get.put<PatientController>(PatientController());
-      }),
-      defaultTransition: Transition.noTransition,
+      initialRoute: '/',
     );
   }
 }
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+class HomeViewNavigation {
+  HomeViewNavigation._();
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Row(
-        children: [
-          PersistentSidebar(),
-          Expanded(child: HomeScreen()),
-        ],
-      ),
-    );
-  }
+  static const id = 0;
+
+  static const home = '/home';
+  static const detail = '/home/detail';
 }
 
-class PersistentSidebar extends StatelessWidget {
-  const PersistentSidebar({super.key});
+class HomeViewWrapper extends StatelessWidget {
+  const HomeViewWrapper({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      height: MediaQuery.sizeOf(context).height,
-      decoration: BoxDecoration(color: Colors.amber[100]),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () => Get.toNamed('/'),
-            child: const Text('Home'),
+    return Row(
+      children: [
+        // SIDEBAR
+        Container(
+          width: 200,
+          height: double.infinity,
+          decoration: BoxDecoration(color: Colors.amber[100]),
+          child: Column(
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    Get.offNamed(
+                      '/home',
+                      id: HomeViewNavigation.id,
+                    );
+                  },
+                  child: const Text('Home')),
+              ElevatedButton(
+                  onPressed: () {
+                    Get.offNamed(
+                      '/settings',
+                      id: HomeViewNavigation.id,
+                    );
+                  },
+                  child: const Text('Settings'))
+            ],
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => Get.toNamed('/patients'),
-            child: const Text('Patients'),
+        ),
+        // NAVIGATOR
+        Expanded(
+          child: Navigator(
+            key: Get.nestedKey(HomeViewNavigation.id),
+            onGenerateRoute: (settings) {
+              debugPrint("😏😏😏 ${settings.name}");
+              if (settings.name == '/settings') {
+                return GetPageRoute(
+                  routeName: '/settings',
+                  page: () => const SettingsScreen(),
+                );
+              } else if (settings.name == HomeViewNavigation.detail) {
+                return GetPageRoute(
+                  routeName: HomeViewNavigation.detail,
+                  page: () =>
+                      const HomeScreen(id: HomeViewNavigation.id, first: false),
+                );
+              } else {
+                return GetPageRoute(
+                  routeName: HomeViewNavigation.home,
+                  page: () =>
+                      const HomeScreen(id: HomeViewNavigation.id, first: true),
+                );
+              }
+            },
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final int? id;
+  final bool first;
+
+  const HomeScreen({Key? key, this.id, required this.first}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () => Navigator.pushNamed(context, '/detail'),
-        child: const Text('Go to Detail Screen'),
-      ),
-    );
+    if (first) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: const Text('Home'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () =>
+              Get.toNamed(HomeViewNavigation.detail, id: HomeViewNavigation.id),
+          child: const Icon(Icons.chevron_right),
+        ),
+        body: const Center(child: Text('Home Page')),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          title: const Text('Detail'),
+        ),
+        body: const Center(child: Text('Detail Page')),
+      );
+    }
   }
 }
 
-class DetailScreen extends StatelessWidget {
-  const DetailScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          const PersistentSidebar(),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Breadcrumb(),
-                const Center(
-                  child: Text('Detail Screen'),
-                ),
-                const SizedBox.shrink(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PatientsScreen extends StatelessWidget {
-  const PatientsScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  final int? id;
+  const SettingsScreen({
+    Key? key,
+    this.id,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          const PersistentSidebar(),
-          Expanded(
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () => Get.toNamed(
-                  '/patients/123',
-                ), // For patient with ID 123
-                child: const Text('Go to PatientData Screen with ID'),
-              ),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: const Text('Settings'),
       ),
-    );
-  }
-}
-
-class PatientDataScreen extends GetView<PatientController> {
-  const PatientDataScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final patientId = Get.parameters['id'] ?? ''; // Extract ID from the URL
-    return Scaffold(
-      body: Row(
-        children: [
-          const PersistentSidebar(),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Breadcrumb(),
-                Center(
-                  child: Text('PatientData Screen for Patient ID: $patientId'),
-                ),
-                const SizedBox.shrink(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PatientController extends GetxController {
-  RxString patientId = ''.obs;
-
-  void setPatientId(String id) {
-    patientId.value = id;
-  }
-}
-
-class Breadcrumb extends StatelessWidget {
-  List<Map<String, String>> getBreadcrumbsFromUrl() {
-    String url = Get.currentRoute; // Get current route with GetX
-
-    // Split the URL by '/' and remove empty segments
-    List<String> segments =
-        url.split('/').where((segment) => segment.isNotEmpty).toList();
-
-    // Map each segment to its human-readable counterpart and corresponding route
-    List<Map<String, String>> breadcrumbMap = segments.map((segment) {
-      if (segment.contains('patient') &&
-          segments.indexOf(segment) == segments.length - 1) {
-        return {
-          'display': 'Patient ${Get.parameters['id'] ?? ''}',
-          'route': '/patient/${Get.parameters['id']}'
-        };
-      }
-      return {'display': segment.capitalizeFirst ?? '', 'route': "/$segment"};
-    }).toList();
-
-    breadcrumbMap.insert(0, {
-      'display': 'Dashboard',
-      'route': '/'
-    }); // Add 'Dashboard' as the starting breadcrumb
-
-    return breadcrumbMap;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Map<String, String>> breadcrumbs = getBreadcrumbsFromUrl();
-
-    return Row(
-      children: breadcrumbs.map((breadcrumb) {
-        return Row(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                Get.offNamed(breadcrumb['route']!);
-              },
-              child: Text(breadcrumb['display']!,
-                  style: TextStyle(
-                      decoration: TextDecoration
-                          .underline)), // you can style it to show it's clickable
-            ),
-            if (breadcrumb != breadcrumbs.last) ...[
-              Icon(Icons.arrow_forward_ios,
-                  size: 12), // Arrow icon or something similar
-            ]
-          ],
-        );
-      }).toList(),
+      body: const Center(child: Text('Settings Page')),
     );
   }
 }
