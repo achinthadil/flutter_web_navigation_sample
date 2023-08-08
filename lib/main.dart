@@ -20,6 +20,7 @@ class NestedNavigation extends StatelessWidget {
         ),
       ],
       initialRoute: '/',
+      defaultTransition: Transition.noTransition,
     );
   }
 }
@@ -48,10 +49,11 @@ class HomeViewWrapper extends StatelessWidget {
           height: double.infinity,
           decoration: BoxDecoration(color: Colors.amber[100]),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                   onPressed: () {
-                    Get.offNamed(
+                    Get.offAllNamed(
                       HomeViewNavigation.home,
                       id: HomeViewNavigation.id,
                     );
@@ -59,7 +61,7 @@ class HomeViewWrapper extends StatelessWidget {
                   child: const Text('Home')),
               ElevatedButton(
                   onPressed: () {
-                    Get.offNamed(
+                    Get.offAllNamed(
                       HomeViewNavigation.settings,
                       id: HomeViewNavigation.id,
                     );
@@ -144,7 +146,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.orange,
         title: const Text('Settings'),
       ),
       body: const Center(child: Text('Settings Page')),
