@@ -10,7 +10,7 @@ class NestedNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return GetMaterialApp.router(
       title: 'Nested Navigation - BNB',
       theme: ThemeData(primarySwatch: Colors.blue),
       getPages: [
@@ -19,8 +19,21 @@ class NestedNavigation extends StatelessWidget {
           page: () => const HomeViewWrapper(),
         ),
       ],
-      initialRoute: '/',
-      defaultTransition: Transition.noTransition,
+      // initialRoute: '/',
+      routerDelegate: AppRouterDelegate(),
+      // defaultTransition: Transition.noTransition,
+    );
+  }
+}
+
+class AppRouterDelegate extends GetDelegate {
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      onPopPage: (route, result) => route.didPop(result),
+      pages: currentConfiguration != null
+          ? [currentConfiguration!.currentPage!]
+          : [GetNavConfig.fromRoute('/')!.currentPage!],
     );
   }
 }
@@ -53,17 +66,15 @@ class HomeViewWrapper extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    Get.offAllNamed(
+                    Get.rootDelegate.offNamed(
                       HomeViewNavigation.home,
-                      id: HomeViewNavigation.id,
                     );
                   },
                   child: const Text('Home')),
               ElevatedButton(
                   onPressed: () {
-                    Get.offAllNamed(
+                    Get.rootDelegate.offNamed(
                       HomeViewNavigation.settings,
-                      id: HomeViewNavigation.id,
                     );
                   },
                   child: const Text('Settings'))
@@ -84,14 +95,12 @@ class HomeViewWrapper extends StatelessWidget {
               } else if (settings.name == HomeViewNavigation.detail) {
                 return GetPageRoute(
                   routeName: HomeViewNavigation.detail,
-                  page: () =>
-                      const HomeScreen(id: HomeViewNavigation.id, first: false),
+                  page: () => const HomeScreen(first: false),
                 );
               } else {
                 return GetPageRoute(
                   routeName: HomeViewNavigation.home,
-                  page: () =>
-                      const HomeScreen(id: HomeViewNavigation.id, first: true),
+                  page: () => const HomeScreen(first: true),
                 );
               }
             },
@@ -117,8 +126,9 @@ class HomeScreen extends StatelessWidget {
           title: const Text('Home'),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () =>
-              Get.toNamed(HomeViewNavigation.detail, id: HomeViewNavigation.id),
+          onPressed: () => Get.rootDelegate.toNamed(
+            HomeViewNavigation.detail,
+          ),
           child: const Icon(Icons.chevron_right),
         ),
         body: const Center(child: Text('Home Page')),
